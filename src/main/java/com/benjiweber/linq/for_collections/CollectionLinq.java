@@ -3,16 +3,15 @@ package com.benjiweber.linq.for_collections;
 import com.benjiweber.linq.ForwardingCollection;
 import com.benjiweber.linq.Group;
 import com.benjiweber.linq.Linq;
+import com.benjiweber.linq.tuples.Tuple;
 
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 import static com.benjiweber.linq.Group.group;
 import static com.benjiweber.linq.for_collections.EqualsHashcodeSupport.equalsHashCode;
+import static com.benjiweber.linq.tuples.Tuple.tuple;
 import static java.util.stream.Collectors.toCollection;
 
 public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
@@ -72,10 +71,21 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
         return delegate().size() > 0 ? Optional.of(delegate().iterator().next()) : Optional.empty();
     }
     default Optional<T> last() {
-        return delegate().size() > 0 ? Optional.of(list().get(delegate().size() -1)) : Optional.empty();
+        return delegate().size() > 0 ? Optional.of(list().get(delegate().size() - 1)) : Optional.empty();
     }
     default Linq<T> skip(int n) {
         return streamOp(stream -> stream.skip(n));
+    }
+
+    default <U> CollectionLinq<Tuple<T,U>> from(Collection<U> toJoin) {
+        return join(toJoin).on((a,b) -> true);
+    }
+    interface CollectionJoinCondition<A,B> extends JoinCondition<A,B> {
+        CollectionLinq<Tuple<A,B>> on(BiPredicate<A,B> condition);
+    }
+
+    default <U> CollectionJoinCondition<T,U>  join(Collection<U> toJoin) {
+        return condition -> streamOp(stream -> stream.flatMap(item -> toJoin.stream().filter(joiningItem -> condition.test(item, joiningItem)).map(joiningItem -> tuple(item, joiningItem))));
     }
 
 }

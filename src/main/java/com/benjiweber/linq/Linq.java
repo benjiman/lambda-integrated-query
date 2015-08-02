@@ -1,11 +1,12 @@
 package com.benjiweber.linq;
 
+import com.benjiweber.linq.tuples.Tuple;
+
+import java.security.DigestInputStream;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 
 public interface Linq<T> {
     <R> Linq<R> select(Function<T, R> mapper);
@@ -44,5 +45,9 @@ public interface Linq<T> {
     Linq<T> skip(int n);
     static BinaryOperator<Long> sum = (a,b) -> a+b;
 
-
+    <U> Linq<Tuple<T,U>> from(Collection<U> toJoin);
+    interface JoinCondition<A,B> {
+        Linq<Tuple<A,B>> on(BiPredicate<A,B> condition);
+    }
+    <U> JoinCondition<T,U> join(Collection<U> toJoin);
 }
