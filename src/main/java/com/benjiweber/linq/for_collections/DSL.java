@@ -19,6 +19,10 @@ public class DSL {
         return tuple -> explodedMapper.apply(tuple.one(), tuple.two());
     }
 
+    public static <T,U> Consumer<Tuple<T,U>> of(BiConsumer<T,U> explodedConsumer) {
+        return tuple -> explodedConsumer.accept(tuple.one(), tuple.two());
+    }
+
     public static BinaryOperator<Integer> sumInt() {
         return (a,b) -> a+b;
     }

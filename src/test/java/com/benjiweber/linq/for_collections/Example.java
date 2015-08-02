@@ -95,6 +95,14 @@ public class Example {
         );
     }
 
+
+    @Test
+    public void anonymous_types_consumer() {
+        from(customerList)
+            .select(customer -> tuple(customer.companyName(), customer.companyName().length()))
+            .forEach(of((name, length) -> System.out.println(name)));
+    }
+
     @Test
     public void aggregate_function() {
         Long result =
@@ -222,5 +230,6 @@ public class Example {
                 results
         );
     }
+
 
 }
