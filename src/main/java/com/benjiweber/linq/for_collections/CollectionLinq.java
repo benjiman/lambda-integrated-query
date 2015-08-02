@@ -35,7 +35,7 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
     }
 
     default <U> CollectionLinq<T> whereEquals(Function<T,U> propertyExtractor, U comparisonValue) {
-        return where((Predicate<T>)item -> Objects.equals(comparisonValue, propertyExtractor.apply(item)));
+        return where((Predicate<T>) item -> Objects.equals(comparisonValue, propertyExtractor.apply(item)));
     }
 
     default <U> CollectionLinq<T> whereEquals(U comparisonValue, Function<T,U> propertyExtractor) {
@@ -120,6 +120,23 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
 
     default <U> CollectionJoinCondition<T,U>  join(Collection<U> toJoin) {
         return condition -> streamOp(stream -> stream.flatMap(item -> toJoin.stream().filter(joiningItem -> condition.test(item, joiningItem)).map(joiningItem -> tuple(item, joiningItem))));
+    }
+
+    default <U extends Comparable<U>> CollectionLinq<T> sortBy(Function<T,U> sortProperty) {
+        return streamOp(
+            stream -> stream.sorted(
+                (a,b)-> sortProperty.apply(a).compareTo(sortProperty.apply(b))
+            )
+        );
+    }
+
+    default <U> CollectionLinq<T> sortBy(Function<T,U> sortProperty, Comparator<U> comparator) {
+        return streamOp(stream -> stream.sorted(
+                (a, b) -> comparator.compare(
+                        sortProperty.apply(a),
+                        sortProperty.apply(b)
+                )
+        ));
     }
 
 }

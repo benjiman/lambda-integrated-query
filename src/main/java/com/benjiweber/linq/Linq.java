@@ -4,6 +4,7 @@ import com.benjiweber.linq.tuples.Tuple;
 
 import java.security.DigestInputStream;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.*;
@@ -56,4 +57,7 @@ public interface Linq<T> {
         Linq<Tuple<A,B>> on(BiPredicate<A,B> condition);
     }
     <U> JoinCondition<T,U> join(Collection<U> toJoin);
+
+    <U extends Comparable<U>> Linq<T> sortBy(Function<T,U> sortProperty);
+    <U> Linq<T> sortBy(Function<T,U> sortProperty, Comparator<U> comparator);
 }

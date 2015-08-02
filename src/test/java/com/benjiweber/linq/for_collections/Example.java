@@ -92,8 +92,8 @@ public class Example {
             .list();
 
         assertEquals(
-            asList("Another company"),
-            result
+                asList("Another company"),
+                result
         );
     }
 
@@ -233,15 +233,15 @@ public class Example {
         );
     }
 
-    @Test
-    public void whereAggregate() {
-        List<Person> people = asList(
+    List<Person> people = asList(
             person("Charlotte", pet(4), pet(6)),
             person("Bob", pet(4), pet(16), pet(20)),
             person("Rui", pet(40)),
             person("Arlene", pet(11), pet(12))
-        );
+    );
 
+    @Test
+    public void whereAggregate() {
         List<String> names =
             from(people)
                 .whereAggregate(Person::pets).all(pet -> pet.age() > 10)
@@ -256,6 +256,37 @@ public class Example {
             names
         );
     }
+
+    @Test
+    public void sorted() {
+        List<String> result =
+            from(people)
+                .sortBy(Person::name)
+                .select(Person::name)
+                .list();
+
+        assertEquals(
+            asList("Arlene", "Bob", "Charlotte", "Rui"),
+            result
+        );
+    }
+
+
+    @Test
+    public void sorted_comparator() {
+        List<String> result =
+                from(people)
+                    .sortBy(i->i, (person1, person2) -> person1.name().compareTo(person2.name()))
+                    .select(Person::name)
+                    .list();
+
+        assertEquals(
+                asList("Arlene", "Bob", "Charlotte", "Rui"),
+                result
+        );
+    }
+
+
 
     interface Pet {
         int age();
