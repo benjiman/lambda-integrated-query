@@ -13,6 +13,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static com.benjiweber.linq.Group.group;
+import static com.benjiweber.linq.for_collections.EqualsHashcodeSupport.equalsHashCode;
 import static java.util.stream.Collectors.toCollection;
 
 public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
@@ -45,7 +46,7 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
 
     default <R> CollectionLinq<R> streamOp(Function<Stream<T>,Stream<R>> f) {
         Stream<R> stream = f.apply(delegate().stream());
-        return () -> stream.collect(toCollection(ArrayList::new));
+        return equalsHashCode(stream.collect(toCollection(ArrayList::new)));
     }
 
     default List<T> list() {
