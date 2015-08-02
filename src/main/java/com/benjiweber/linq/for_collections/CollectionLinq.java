@@ -35,11 +35,45 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
     }
 
     default <U> CollectionLinq<T> whereEquals(Function<T,U> propertyExtractor, U comparisonValue) {
-        return where(item -> Objects.equals(comparisonValue, propertyExtractor.apply(item)));
+        return where((Predicate<T>)item -> Objects.equals(comparisonValue, propertyExtractor.apply(item)));
     }
 
     default <U> CollectionLinq<T> whereEquals(U comparisonValue, Function<T,U> propertyExtractor) {
         return whereEquals(propertyExtractor, comparisonValue);
+    }
+
+    interface CollectionCollectionCondition<T,U,V> extends CollectionCondition<T,U,V> {
+        CollectionLinq<T> all(Predicate<U> condition);
+        CollectionLinq<T> any(Predicate<U> condition);
+        CollectionLinq<T> contains(U item);
+    }
+
+    default <U,V extends Collection<U>> CollectionCollectionCondition<T,U,V> whereAggregate(Function<T,V> collectionGetter) {
+        return new CollectionCollectionCondition<T,U,V>() {
+            public CollectionLinq<T> all(Predicate<U> condition) {
+                return () ->
+                    delegate()
+                        .stream()
+                        .filter(item ->
+                            collectionGetter.apply(item)
+                                .stream()
+                                .allMatch(condition)
+                        ).collect(toCollection(ArrayList::new));
+            }
+            public CollectionLinq<T> any(Predicate<U> condition) {
+                return () ->
+                    delegate()
+                        .stream()
+                        .filter(item ->
+                                        collectionGetter.apply(item)
+                                                .stream()
+                                                .anyMatch(condition)
+                        ).collect(toCollection(ArrayList::new));
+            }
+            public CollectionLinq<T> contains(U item) {
+                return any(x -> Objects.equals(x, item));
+            }
+        };
     }
 
     default <R> CollectionLinq<R> streamOp(Function<Stream<T>,Stream<R>> f) {

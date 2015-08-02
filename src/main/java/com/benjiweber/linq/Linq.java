@@ -13,6 +13,12 @@ public interface Linq<T> {
     <R, U extends Collection<R>> Linq<R> selectMany(Function<T, U> mapper);
     <K> Group<K,T> groupBy(Function<T, K> keyExtractor);
     Linq<T> where(Predicate<T> predicate);
+    interface CollectionCondition<T,U,V> {
+        Linq<T> all(Predicate<U> condition);
+        Linq<T> any(Predicate<U> condition);
+        Linq<T> contains(U item);
+    }
+    <U,V extends Collection<U>> CollectionCondition<T,U,V> whereAggregate(Function<T,V> collectionGetter);
     <U> Linq<T> whereEquals(Function<T,U> propertyExtractor, U comparisonValue);
     <U> Linq<T> whereEquals(U comparisonValue, Function<T,U> propertyExtractor);
     Optional<T> reduce(BinaryOperator<T> reducer);
