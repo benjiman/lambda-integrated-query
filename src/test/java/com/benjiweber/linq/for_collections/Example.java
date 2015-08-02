@@ -50,20 +50,21 @@ public class Example {
 
     }
 
+    // Example from https://code.msdn.microsoft.com/LINQ-to-DataSets-Grouping-c62703ea
     @Test
     public void linq43_example_grouping() {
         from(customerList)
-            .select(c -> tuple(
-                c.companyName(),
-                from(c.orders())
-                    .groupBy(o -> o.orderDate().year())
-                    .select(yg -> tuple(
-                            yg.one(),
-                            from(yg.two())
-                                .groupBy(o -> o.orderDate().month())
-                                .select(mg -> tuple(mg.one(), mg.two()))
+                .select(c -> tuple(
+                        c.companyName(),
+                        from(c.orders())
+                                .groupBy(o -> o.orderDate().year())
+                                .select(yg -> tuple(
+                                        yg.one(),
+                                        from(yg.two())
+                                                .groupBy(o -> o.orderDate().month())
+                                                .select(mg -> tuple(mg.one(), mg.two()))
 
-                    ))
+                                ))
             ))
             .forEach(System.out::println);
     }

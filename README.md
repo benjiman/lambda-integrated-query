@@ -34,6 +34,7 @@ LINQ style queries for Java 8 Streams
     }
 
     @Test
+    // Example from https://code.msdn.microsoft.com/LINQ-to-DataSets-Grouping-c62703ea
     public void linq43_example_grouping() {
         from(customerList)
           .select(c -> tuple(
