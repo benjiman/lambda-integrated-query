@@ -4,10 +4,9 @@ import com.benjiweber.linq.ForwardingCollection;
 import com.benjiweber.linq.Group;
 import com.benjiweber.linq.Linq;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -47,6 +46,22 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
     default <R> CollectionLinq<R> streamOp(Function<Stream<T>,Stream<R>> f) {
         Stream<R> stream = f.apply(delegate().stream());
         return equalsHashCode(stream.collect(toCollection(ArrayList::new)));
+    }
+
+    default T reduce(T seed, BinaryOperator<T> aggregator) {
+        return delegate().stream().reduce(seed, aggregator);
+    }
+
+    default <U> U reduce(U seed, BiFunction<U, T, U> accumulator, BinaryOperator<U> combiner) {
+        return delegate().stream().reduce(seed, accumulator, combiner);
+    }
+
+    default Optional<T> reduce(BinaryOperator<T> reducer) {
+        return delegate().stream().reduce(reducer);
+    }
+
+    default <U> AggregateInto<U> aggregate(Function<T,U> getter) {
+        return aggregator -> select(getter).reduce(aggregator).orElse(null);
     }
 
     default List<T> list() {

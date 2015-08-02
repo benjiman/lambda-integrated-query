@@ -1,9 +1,7 @@
 package com.benjiweber.linq.for_collections;
 
-import com.benjiweber.linq.example.domain.SampleCustomers;
 import com.benjiweber.linq.example.domain.SampleCustomers.Customer;
 import com.benjiweber.linq.example.domain.SampleCustomers.Order;
-import com.benjiweber.linq.tuples.Tuple;
 import org.junit.Test;
 
 import java.util.*;
@@ -78,8 +76,8 @@ public class Example {
                 .list();
 
         assertEquals(
-            asList("A Company9", "Another company15"),
-            result
+                asList("A Company9", "Another company15"),
+                result
         );
     }
 
@@ -94,6 +92,66 @@ public class Example {
         assertEquals(
             asList("Another company"),
             result
+        );
+    }
+
+    @Test
+    public void aggregate_function() {
+        Long result =
+            from(customerList)
+                .aggregate(customer -> asLong(customer.companyName().length())).into(sum());
+
+        assertEquals(
+                asLong(24),
+                result
+        );
+    }
+
+    @Test
+    public void default_sum() {
+        Long result =
+            from(customerList)
+                .sum(customer -> asLong(customer.companyName().length()));
+
+        assertEquals(
+                asLong(24),
+                result
+        );
+    }
+
+    @Test
+    public void default_max() {
+        Long result =
+                from(customerList)
+                    .max(customer -> asLong(customer.companyName().length()));
+
+        assertEquals(
+                asLong(15),
+                result
+        );
+    }
+
+    @Test
+    public void default_min() {
+        Long result =
+                from(customerList)
+                        .min(customer -> asLong(customer.companyName().length()));
+
+        assertEquals(
+                asLong(9),
+                result
+        );
+    }
+
+    @Test
+    public void default_count() {
+        Long result =
+                from(customerList)
+                    .count();
+
+        assertEquals(
+                asLong(2),
+                result
         );
     }
 }

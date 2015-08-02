@@ -3,10 +3,7 @@ package com.benjiweber.linq.for_collections;
 import com.benjiweber.linq.tuples.Tuple;
 
 import java.util.Collection;
-import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 
 public class DSL {
 
@@ -20,6 +17,18 @@ public class DSL {
 
     public static <T,U,R> Function<Tuple<T,U>, R> into(BiFunction<T,U,R> explodedMapper) {
         return tuple -> explodedMapper.apply(tuple.one(), tuple.two());
+    }
+
+    public static BinaryOperator<Integer> sumInt() {
+        return (a,b) -> a+b;
+    }
+
+    public static BinaryOperator<Long> sum() {
+        return (a,b) -> a+b;
+    }
+
+    public static Long asLong(Integer integer) {
+        return Long.valueOf(integer);
     }
 
 }
