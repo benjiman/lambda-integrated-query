@@ -11,7 +11,7 @@ import java.util.*;
 import static com.benjiweber.linq.example.domain.SampleCustomers.Order.order;
 import static com.benjiweber.linq.example.domain.SampleCustomers.OrderDate.orderDate;
 import static com.benjiweber.linq.example.domain.SampleCustomers.getCustomerList;
-import static com.benjiweber.linq.for_collections.DSL.from;
+import static com.benjiweber.linq.for_collections.DSL.*;
 import static com.benjiweber.linq.tuples.Tuple.tuple;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -69,6 +69,31 @@ public class Example {
             .forEach(System.out::println);
     }
 
+    @Test
+    public void anonymous_types_projection() {
+        List<String> result =
+            from(customerList)
+                .select(customer -> tuple(customer.companyName(), customer.companyName().length()))
+                .select(into((name, length) -> name + length))
+                .list();
 
+        assertEquals(
+            asList("A Company9", "Another company15"),
+            result
+        );
+    }
 
+    @Test
+    public void anonymous_types_filter() {
+        List<String> result = from(customerList)
+            .select(customer -> tuple(customer.companyName(), customer.companyName().length()))
+            .where(match((name, length) -> name.contains("t")))
+            .select(into((name, length) -> name))
+            .list();
+
+        assertEquals(
+            asList("Another company"),
+            result
+        );
+    }
 }
