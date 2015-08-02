@@ -154,4 +154,45 @@ public class Example {
                 result
         );
     }
+
+    @Test
+    public void first() {
+        String result =
+                from(customerList)
+                    .select(Customer::companyName)
+                     .first().orElse("unknown");
+
+        assertEquals(
+            "A Company",
+            result
+        );
+    }
+
+    @Test
+    public void last() {
+        String result =
+                from(customerList)
+                        .select(Customer::companyName)
+                        .last().orElse("unknown");
+
+        assertEquals(
+                "Another company",
+                result
+        );
+    }
+
+    @Test
+    public void skip() {
+        String result =
+            from(customerList)
+                .select(Customer::companyName)
+                .skip(1)
+                .first().orElse("unknown");
+
+        assertEquals(
+                "Another company",
+                result
+        );
+    }
+
 }

@@ -33,7 +33,16 @@ public interface Linq<T> {
     default Long min(Function<T,Long> numberGetter) {
         return select(numberGetter).reduce((a, b) -> a < b ? a : b).orElse(0L);
     }
-
+    default T first(T orElse) {
+        return first().orElse(orElse);
+    }
+    default T last(T orElse) {
+        return last().orElse(orElse);
+    }
+    Optional<T> first();
+    Optional<T> last();
+    Linq<T> skip(int n);
     static BinaryOperator<Long> sum = (a,b) -> a+b;
+
 
 }

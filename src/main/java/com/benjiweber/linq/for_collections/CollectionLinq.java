@@ -67,4 +67,15 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
     default List<T> list() {
         return new ArrayList(delegate());
     }
+
+    default Optional<T> first() {
+        return delegate().size() > 0 ? Optional.of(delegate().iterator().next()) : Optional.empty();
+    }
+    default Optional<T> last() {
+        return delegate().size() > 0 ? Optional.of(list().get(delegate().size() -1)) : Optional.empty();
+    }
+    default Linq<T> skip(int n) {
+        return streamOp(stream -> stream.skip(n));
+    }
+
 }
