@@ -59,8 +59,8 @@ public interface Linq<T> {
     }
     <U> JoinCondition<T,U> join(Collection<U> toJoin);
 
-    <U extends Comparable<U>> Linq<T> sortBy(Function<T,U> sortProperty);
-    <U> Linq<T> sortBy(Function<T,U> sortProperty, Comparator<U> comparator);
+    <U extends Comparable<U>> Linq<T> orderBy(Function<T, U> sortProperty);
+    <U> Linq<T> orderBy(Function<T, U> sortProperty, Comparator<U> comparator);
 
     <R extends T> Linq<R> ofType(Class<R> type);
 }

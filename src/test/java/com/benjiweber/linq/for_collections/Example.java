@@ -260,7 +260,7 @@ public class Example {
     public void sorted() {
         List<String> result =
             from(people)
-                .sortBy(Person::name)
+                .orderBy(Person::name)
                 .select(Person::name)
                 .list();
 
@@ -275,7 +275,7 @@ public class Example {
     public void sorted_comparator() {
         List<String> result =
                 from(people)
-                    .sortBy(i->i, (person1, person2) -> person1.name().compareTo(person2.name()))
+                    .orderBy(i -> i, (person1, person2) -> person1.name().compareTo(person2.name()))
                     .select(Person::name)
                     .list();
 

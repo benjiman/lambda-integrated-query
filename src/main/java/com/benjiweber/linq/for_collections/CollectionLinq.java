@@ -132,7 +132,7 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
         return condition -> streamOp(stream -> stream.flatMap(item -> toJoin.stream().filter(joiningItem -> condition.test(item, joiningItem)).map(joiningItem -> tuple(item, joiningItem))));
     }
 
-    default <U extends Comparable<U>> CollectionLinq<T> sortBy(Function<T,U> sortProperty) {
+    default <U extends Comparable<U>> CollectionLinq<T> orderBy(Function<T, U> sortProperty) {
         return streamOp(
             stream -> stream.sorted(
                 (a,b)-> sortProperty.apply(a).compareTo(sortProperty.apply(b))
@@ -140,7 +140,7 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
         );
     }
 
-    default <U> CollectionLinq<T> sortBy(Function<T,U> sortProperty, Comparator<U> comparator) {
+    default <U> CollectionLinq<T> orderBy(Function<T, U> sortProperty, Comparator<U> comparator) {
         return streamOp(stream -> stream.sorted(
                 (a, b) -> comparator.compare(
                         sortProperty.apply(a),
