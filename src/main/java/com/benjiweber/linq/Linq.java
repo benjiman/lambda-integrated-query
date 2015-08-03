@@ -52,6 +52,7 @@ public interface Linq<T> {
     Linq<T> skip(int n);
     static BinaryOperator<Long> sum = (a,b) -> a+b;
 
+    <U> Linq<Tuple<T,U>> from(Function<T, Collection<U>> joiner);
     <U> Linq<Tuple<T,U>> from(Collection<U> toJoin);
     interface JoinCondition<A,B> {
         Linq<Tuple<A,B>> on(BiPredicate<A,B> condition);

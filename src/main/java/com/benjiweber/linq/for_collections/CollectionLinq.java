@@ -10,6 +10,7 @@ import java.util.function.*;
 import java.util.stream.Stream;
 
 import static com.benjiweber.linq.Group.group;
+import static com.benjiweber.linq.for_collections.DSL.into;
 import static com.benjiweber.linq.for_collections.EqualsHashcodeSupport.equalsHashCode;
 import static com.benjiweber.linq.tuples.Tuple.tuple;
 import static java.util.stream.Collectors.toCollection;
@@ -112,8 +113,17 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
     }
 
     default <U> CollectionLinq<Tuple<T,U>> from(Collection<U> toJoin) {
-        return join(toJoin).on((a,b) -> true);
+        return join(toJoin).on((a, b) -> true);
     }
+    default <U> CollectionLinq<Tuple<T,U>> from(Function<T, Collection<U>> joiner) {
+        return () ->
+            select(item -> tuple(item, joiner.apply(item)))
+                .streamOp(stream ->
+                    stream.flatMap(into((item, items) -> items.stream().map(i2 -> tuple(item, i2))))
+                );
+
+    }
+
     interface CollectionJoinCondition<A,B> extends JoinCondition<A,B> {
         CollectionLinq<Tuple<A,B>> on(BiPredicate<A,B> condition);
     }
