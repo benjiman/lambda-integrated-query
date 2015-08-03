@@ -6,31 +6,29 @@ LINQ style queries for Java 8 Streams
     @Test
     public void a_company_orders_in_2015() {
         List<Order> ordersIn2015 = from(customerList)
-          .where(company -> Objects.equals("A Company", company.companyName()))
-          .selectMany(c -> c.orders())
-          .where(order -> Objects.equals(2015, order.orderDate().year()))
-          .list();
+                .whereProperty(Customer::companyName).equalTo("A Company")
+                .selectMany(Customer::orders)
+                .whereProperty(order -> order.orderDate().year()).equalTo(2015)
+                .list();
 
         assertEquals(
-          asList(order(orderDate(2015, 4)), order(orderDate(2015, 4)), order(orderDate(2015, 3))),
-          ordersIn2015
+                asList(order(orderDate(2015, 4)), order(orderDate(2015, 4)), order(orderDate(2015, 3))),
+                ordersIn2015
         );
-
     }
 
     @Test
-    public void a_company_orders_in_2015_whereEquals() {
-        List<Order> ordersIn2015 = from(customerList)
-          .whereEquals("A Company", Customer::companyName)
-          .selectMany(c -> c.orders())
-          .whereEquals(2015, order -> order.orderDate().year())
-          .list();
+    public void inner_join() {
+        List<Integer> results =
+            from(asList(1, 2, 3))
+                .join(asList(10, 20, 30)).on((a, b) -> String.valueOf(b).startsWith(String.valueOf(a)))
+                .select(into((a, b) -> a * b))
+                .list();
 
         assertEquals(
-          asList(order(orderDate(2015, 4)), order(orderDate(2015, 4)), order(orderDate(2015, 3))),
-          ordersIn2015
+                asList(10,40,90),
+                results
         );
-
     }
 
     @Test
@@ -49,5 +47,36 @@ LINQ style queries for Java 8 Streams
                             .select(into((month, monthOrders) -> tuple(month, monthOrders)))
                     )))
             )).forEach(System.out::println);
+    }
+
+    @Test
+    public void selectMany() {
+        List<String> phrases = asList("an apple a day", "the quick brown fox");
+
+        List<String> result =
+            from(phrases)
+                .from(phrase -> asList(phrase.split(" ")))
+                .select(into((phrase, word) -> word))
+                .list();
+
+        assertEquals(
+            asList("an", "apple", "a", "day", "the", "quick", "brown", "fox"),
+            result
+        );
+
+    }
+
+    @Test
+    public void any() {
+        List<String> result =
+            from(people)
+                .whereAggregate(pers -> pers.pets()).any(pet -> pet.age() > 6)
+                .select(pers -> pers.name())
+                .list();
+    
+        assertEquals(
+                asList("Rui"),
+                result
+        );
     }
 ```

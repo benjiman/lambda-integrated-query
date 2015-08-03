@@ -22,33 +22,16 @@ public class Example {
 
     @Test
     public void a_company_orders_in_2015() {
-
         List<Order> ordersIn2015 = from(customerList)
-                .where(company -> Objects.equals("A Company", company.companyName()))
-                .selectMany(c -> c.orders())
-                .where(order -> Objects.equals(2015, order.orderDate().year()))
+                .whereProperty(Customer::companyName).equalTo("A Company")
+                .selectMany(Customer::orders)
+                .whereProperty(order -> order.orderDate().year()).equalTo(2015)
                 .list();
 
         assertEquals(
                 asList(order(orderDate(2015, 4)), order(orderDate(2015, 4)), order(orderDate(2015, 3))),
                 ordersIn2015
         );
-
-    }
-
-    @Test
-    public void a_company_orders_in_2015_whereEquals() {
-        List<Order> ordersIn2015 = from(customerList)
-                .whereEquals("A Company", Customer::companyName)
-                .selectMany(c -> c.orders())
-                .whereEquals(2015, order -> order.orderDate().year())
-                .list();
-
-        assertEquals(
-                asList(order(orderDate(2015, 4)), order(orderDate(2015, 4)), order(orderDate(2015, 3))),
-                ordersIn2015
-        );
-
     }
 
     // Example from https://code.msdn.microsoft.com/LINQ-to-DataSets-Grouping-c62703ea
