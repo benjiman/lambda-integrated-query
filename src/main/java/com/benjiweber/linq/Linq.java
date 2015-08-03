@@ -22,6 +22,12 @@ public interface Linq<T> {
     <U,V extends Collection<U>> CollectionCondition<T,U,V> whereAggregate(Function<T,V> collectionGetter);
     <U> Linq<T> whereEquals(Function<T,U> propertyExtractor, U comparisonValue);
     <U> Linq<T> whereEquals(U comparisonValue, Function<T,U> propertyExtractor);
+    interface PropertyComparison<T,U> {
+        Linq<T> equalTo(U value);
+        Linq<T> lessThan(U value);
+        Linq<T> greaterThan(U value);
+    }
+    <U extends Comparable<U>> PropertyComparison<T,U> whereProperty(Function<T,U> propertyExtractor);
     Optional<T> reduce(BinaryOperator<T> reducer);
     <U> U reduce(U seed, BiFunction<U, T, U> accumulator, BinaryOperator<U> combiner);
     T reduce(T seed, BinaryOperator<T> aggregator);

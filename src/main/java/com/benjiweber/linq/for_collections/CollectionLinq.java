@@ -39,6 +39,25 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
         return where((Predicate<T>) item -> Objects.equals(comparisonValue, propertyExtractor.apply(item)));
     }
 
+    interface CollectionPropertyComparison<T,U> extends PropertyComparison<T,U> {
+        CollectionLinq<T> equalTo(U value);
+        CollectionLinq<T> lessThan(U value);
+        CollectionLinq<T> greaterThan(U value);
+    }
+    default <U extends Comparable<U>> CollectionPropertyComparison<T,U> whereProperty(Function<T,U> propertyExtractor) {
+        return new CollectionPropertyComparison<T, U>() {
+            public CollectionLinq<T> equalTo(U value) {
+                return where(item -> Objects.equals(propertyExtractor.apply(item), value));
+            }
+            public CollectionLinq<T> lessThan(U value) {
+                return where(item -> propertyExtractor.apply(item).compareTo(value) < 0);
+            }
+            public CollectionLinq<T> greaterThan(U value) {
+                return where (item -> propertyExtractor.apply(item).compareTo(value) > 0);
+            }
+        };
+    }
+
     default <U> CollectionLinq<T> whereEquals(U comparisonValue, Function<T,U> propertyExtractor) {
         return whereEquals(propertyExtractor, comparisonValue);
     }
