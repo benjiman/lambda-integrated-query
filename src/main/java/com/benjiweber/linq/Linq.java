@@ -60,4 +60,6 @@ public interface Linq<T> {
 
     <U extends Comparable<U>> Linq<T> sortBy(Function<T,U> sortProperty);
     <U> Linq<T> sortBy(Function<T,U> sortProperty, Comparator<U> comparator);
+
+    <R extends T> Linq<R> ofType(Class<R> type);
 }

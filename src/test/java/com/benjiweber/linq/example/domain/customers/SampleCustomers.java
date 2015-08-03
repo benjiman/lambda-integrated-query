@@ -1,18 +1,17 @@
-package com.benjiweber.linq.example.domain;
+package com.benjiweber.linq.example.domain.customers;
 
+import java.util.Arrays;
 import java.util.List;
 
-import static com.benjiweber.linq.example.domain.SampleCustomers.Customer.customer;
-import static com.benjiweber.linq.example.domain.SampleCustomers.Order.order;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
+import static com.benjiweber.linq.example.domain.customers.SampleCustomers.Customer.customer;
+import static com.benjiweber.linq.example.domain.customers.SampleCustomers.Order.order;
 
 public class SampleCustomers {
 
     public static List<Customer> getCustomerList() {
-        return asList(
-                customer("A Company", asList(order(OrderDate.orderDate(2015, 4)), order(OrderDate.orderDate(2015, 4)), order(OrderDate.orderDate(2015, 3)), order(OrderDate.orderDate(2014, 3)))),
-                customer("Another company", asList(order(OrderDate.orderDate(2015, 4)), order(OrderDate.orderDate(2015, 3)), order(OrderDate.orderDate(2014, 3)), order(OrderDate.orderDate(2014, 3))))
+        return Arrays.asList(
+                customer("A Company", Arrays.asList(order(OrderDate.orderDate(2015, 4)), order(OrderDate.orderDate(2015, 4)), order(OrderDate.orderDate(2015, 3)), order(OrderDate.orderDate(2014, 3)))),
+                customer("Another company", Arrays.asList(order(OrderDate.orderDate(2015, 4)), order(OrderDate.orderDate(2015, 3)), order(OrderDate.orderDate(2014, 3)), order(OrderDate.orderDate(2014, 3))))
         );
     }
 

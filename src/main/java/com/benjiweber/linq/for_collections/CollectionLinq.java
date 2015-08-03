@@ -139,4 +139,10 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
         ));
     }
 
+    default <R extends T> CollectionLinq<R> ofType(Class<R> type) {
+        return
+            where(item -> type.isAssignableFrom(item.getClass()))
+                .select(item -> type.cast(item));
+    }
+
 }

@@ -1,17 +1,18 @@
 package com.benjiweber.linq.for_collections;
 
-import com.benjiweber.linq.example.domain.SampleCustomers.Customer;
-import com.benjiweber.linq.example.domain.SampleCustomers.Order;
+import com.benjiweber.linq.example.domain.customers.SampleCustomers.Customer;
+import com.benjiweber.linq.example.domain.customers.SampleCustomers.Order;
+import com.benjiweber.linq.example.domain.pets.Person;
 import org.junit.Test;
 
 import java.util.*;
 
-import static com.benjiweber.linq.example.domain.SampleCustomers.Order.order;
-import static com.benjiweber.linq.example.domain.SampleCustomers.OrderDate.orderDate;
-import static com.benjiweber.linq.example.domain.SampleCustomers.getCustomerList;
+import static com.benjiweber.linq.example.domain.customers.SampleCustomers.Order.order;
+import static com.benjiweber.linq.example.domain.customers.SampleCustomers.OrderDate.orderDate;
+import static com.benjiweber.linq.example.domain.customers.SampleCustomers.getCustomerList;
+import static com.benjiweber.linq.example.domain.pets.Person.person;
+import static com.benjiweber.linq.example.domain.pets.Pet.pet;
 import static com.benjiweber.linq.for_collections.DSL.*;
-import static com.benjiweber.linq.for_collections.Example.Person.person;
-import static com.benjiweber.linq.for_collections.Example.Pet.pet;
 import static com.benjiweber.linq.tuples.Tuple.tuple;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -285,23 +286,6 @@ public class Example {
     }
 
 
-
-    interface Pet {
-        int age();
-        static Pet pet(int age) {
-            return () -> age;
-        }
-    }
-    interface Person {
-        String name();
-        List<Pet> pets();
-        static Person person(String name, Pet... pets) {
-            return new Person(){
-                public String name() { return name; }
-                public List<Pet> pets() { return asList(pets); }
-            };
-        }
-    }
 
 
 
