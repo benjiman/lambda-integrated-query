@@ -26,4 +26,23 @@ public class Tuple<T,U> {
     public String toString() {
         return "(" + one() + ", " + two() + ")";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Tuple<?, ?> tuple = (Tuple<?, ?>) o;
+
+        if (one != null ? !one.equals(tuple.one) : tuple.one != null) return false;
+        return !(two != null ? !two.equals(tuple.two) : tuple.two != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = one != null ? one.hashCode() : 0;
+        result = 31 * result + (two != null ? two.hashCode() : 0);
+        return result;
+    }
 }
