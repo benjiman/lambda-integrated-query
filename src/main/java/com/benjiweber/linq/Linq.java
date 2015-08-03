@@ -41,20 +41,14 @@ public interface Linq<T> {
     default Long sum(Function<T,Long> numberGetter) {
         return select(numberGetter).reduce(sum).orElse(0L);
     }
-    default Long max(Function<T,Long> numberGetter) {
-        return select(numberGetter).reduce((a, b) -> a > b ? a : b).orElse(0L);
+    default <U extends Number & Comparable<U>> U max(Function<T,U> numberGetter) {
+        return select(numberGetter).reduce((a, b) -> a.compareTo(b) > 0 ? a : b).orElse((U)(Number)0);
     }
-    default Long min(Function<T,Long> numberGetter) {
-        return select(numberGetter).reduce((a, b) -> a < b ? a : b).orElse(0L);
+    default <U extends Number & Comparable<U>> U min(Function<T,U> numberGetter) {
+        return select(numberGetter).reduce((a, b) -> a.compareTo(b) < 0 ? a : b).orElse((U)(Number)0);
     }
     default Double sumDouble(Function<T,Double> numberGetter) {
         return select(numberGetter).reduce((a,b) -> a+b).orElse(0D);
-    }
-    default Double maxDouble(Function<T,Double> numberGetter) {
-        return select(numberGetter).reduce((a, b) -> a > b ? a : b).orElse(0D);
-    }
-    default Double minDouble(Function<T,Double> numberGetter) {
-        return select(numberGetter).reduce((a, b) -> a < b ? a : b).orElse(0D);
     }
     default T first(T orElse) {
         return first().orElse(orElse);

@@ -23,7 +23,7 @@ public class AggregationOperations {
     @Test
     public void max() {
         Double max = from(temperatures)
-                .maxDouble(i -> i);
+            .max(i -> i);
 
         assertEquals(Double.valueOf(88.6), max);
     }
@@ -31,7 +31,7 @@ public class AggregationOperations {
     @Test
     public void min() {
         Double min = from(temperatures)
-                .minDouble(i -> i);
+            .min(i -> i);
 
         assertEquals(Double.valueOf(68.5), min);
     }
