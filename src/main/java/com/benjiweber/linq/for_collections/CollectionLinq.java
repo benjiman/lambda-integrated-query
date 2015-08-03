@@ -108,7 +108,7 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
     default Optional<T> last() {
         return delegate().size() > 0 ? Optional.of(list().get(delegate().size() - 1)) : Optional.empty();
     }
-    default Linq<T> skip(int n) {
+    default CollectionLinq<T> skip(int n) {
         return streamOp(stream -> stream.skip(n));
     }
 
@@ -119,7 +119,7 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
         return () ->
             select(item -> tuple(item, joiner.apply(item)))
                 .streamOp(stream ->
-                    stream.flatMap(into((item, items) -> items.stream().map(i2 -> tuple(item, i2))))
+                                stream.flatMap(into((item, items) -> items.stream().map(i2 -> tuple(item, i2))))
                 );
 
     }
