@@ -31,7 +31,7 @@ public class QuantifierOperations {
     public void all() {
         List<String> result =
             from(people)
-                .where(collection(Person::pets)).all(pet -> pet.age() > 2)
+                .where(collection(Person::pets).all(pet -> pet.age() > 2))
                 .select(pers -> pers.name())
                 .list();
 
@@ -45,7 +45,7 @@ public class QuantifierOperations {
     public void any() {
         List<String> result =
             from(people)
-                .where(collection(Person::pets)).any(pet -> pet.age() > 6)
+                .where(collection(Person::pets).any(pet -> pet.age() > 6))
                 .select(pers -> pers.name())
                 .list();
 
@@ -60,7 +60,7 @@ public class QuantifierOperations {
     public void contains() {
         List<String> result =
             from(people)
-                .where(collection(Person::pets)).contains(boots)
+                .where(collection(Person::pets).contains(boots))
                 .select(pers -> pers.name())
                 .list();
 

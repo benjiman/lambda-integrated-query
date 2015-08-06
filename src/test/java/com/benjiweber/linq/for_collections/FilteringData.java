@@ -64,7 +64,7 @@ public class FilteringData {
         List<String> result =
             from(people)
                 .selectMany(Person::pets)
-                .where(property(Pet::age)).greaterThan(6)
+                .where(property(Pet::age).greaterThan(6))
                 .select(Pet::name)
                 .list();
 
@@ -76,7 +76,7 @@ public class FilteringData {
         List<String> result =
             from(people)
                 .selectMany(Person::pets)
-                .where(property(Pet::age)).lessThan(2)
+                .where(property(Pet::age).lessThan(2))
                 .select(Pet::name)
                 .list();
 
@@ -88,7 +88,7 @@ public class FilteringData {
         List<String> result =
             from(people)
                 .selectMany(Person::pets)
-                .where(property(Pet::age)).equalTo(6)
+                .where(property(Pet::age).equalTo(6))
                 .select(Pet::name)
                 .list();
 

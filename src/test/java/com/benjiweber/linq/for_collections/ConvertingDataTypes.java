@@ -26,7 +26,7 @@ public class ConvertingDataTypes {
         List<String> result =
             from(plants)
                 .ofType(CarnivorousPlant.class)
-                .where(property(CarnivorousPlant::trapType)).equalTo("Snap Trap")
+                .where(property(CarnivorousPlant::trapType).equalTo("Snap Trap"))
                 .select(Plant::name)
                 .list();
 

@@ -1,10 +1,11 @@
 package com.benjiweber.linq.for_collections;
 
 import com.benjiweber.linq.CollectionGetter;
-import com.benjiweber.linq.PropertyGetter;
+import com.benjiweber.linq.PropertyPredicate;
 import com.benjiweber.linq.tuples.Tuple;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.*;
 
 public class DSL {
@@ -37,12 +38,28 @@ public class DSL {
         return Long.valueOf(integer);
     }
 
-    public static <T,U,V extends Collection<U>> CollectionGetter<T,U,V> collection(Function<T,V> getter) {
-        return CollectionGetter.collection(getter);
+    public static <T, U extends Comparable> PropertyPredicate.PropertyComparison<T,U> property(Function<T, U> getter) {
+        return PropertyPredicate.property(getter);
     }
 
-    public static <T, U extends Comparable> PropertyGetter<T, U> property(Function<T, U> getter) {
-        return PropertyGetter.property(getter);
+    public static <T, U, V extends Collection<U>> CollectionCondition<T,U,V> collection(Function<T,V> getter) {
+        return new CollectionCondition<T, U, V>() {
+            public Predicate<T> all(Predicate<U> condition) {
+                return item -> getter.apply(item).stream().allMatch(condition);
+            }
+            public Predicate<T> any(Predicate<U> condition) {
+                return item -> getter.apply(item).stream().anyMatch(condition);
+            }
+            public Predicate<T> contains(U comparison) {
+                return item -> getter.apply(item).stream().filter(i -> Objects.equals(comparison, i)).findAny().map(i->true).orElse(false);
+            }
+        };
+    }
+
+    interface CollectionCondition<T,U,V> {
+        Predicate<T> all(Predicate<U> condition);
+        Predicate<T> any(Predicate<U> condition);
+        Predicate<T> contains(U item);
     }
 
 }

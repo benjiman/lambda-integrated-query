@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static com.benjiweber.linq.example.domain.customers.SampleCustomers.Order.order;
 import static com.benjiweber.linq.example.domain.customers.SampleCustomers.OrderDate.orderDate;
@@ -24,11 +25,10 @@ public class Example {
 
     @Test
     public void a_company_orders_in_2015() {
-
         List<Order> ordersIn2015 = from(customerList)
-                .where(property(Customer::companyName)).equalTo("A Company")
+                .where(property(Customer::companyName).equalTo("A Company"))
                 .selectMany(Customer::orders)
-                .where(property(order -> order.orderDate().year())).equalTo(2015)
+                .where(order -> order.orderDate().year() == 2015)
                 .list();
 
         assertEquals(
@@ -229,7 +229,7 @@ public class Example {
     public void whereAggregate() {
         List<String> names =
             from(people)
-                .where(collection(Person::pets)).all(pet -> pet.age() > 10)
+                .where(collection(Person::pets).all(pet -> pet.age() > 10))
                 .select(Person::name)
                 .list();
 
