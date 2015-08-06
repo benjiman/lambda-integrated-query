@@ -1,5 +1,7 @@
 package com.benjiweber.linq.for_collections;
 
+import com.benjiweber.linq.CollectionGetter;
+import com.benjiweber.linq.PropertyGetter;
 import com.benjiweber.linq.tuples.Tuple;
 
 import java.util.Collection;
@@ -33,6 +35,14 @@ public class DSL {
 
     public static Long asLong(Integer integer) {
         return Long.valueOf(integer);
+    }
+
+    public static <T,U,V extends Collection<U>> CollectionGetter<T,U,V> collection(Function<T,V> getter) {
+        return CollectionGetter.collection(getter);
+    }
+
+    public static <T, U extends Comparable> PropertyGetter<T, U> property(Function<T, U> getter) {
+        return PropertyGetter.property(getter);
     }
 
 }

@@ -8,6 +8,7 @@ import java.util.List;
 
 import static com.benjiweber.linq.example.domain.flowers.CarnivorousPlant.carnivorousPlant;
 import static com.benjiweber.linq.for_collections.DSL.from;
+import static com.benjiweber.linq.for_collections.DSL.property;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
@@ -25,7 +26,7 @@ public class ConvertingDataTypes {
         List<String> result =
             from(plants)
                 .ofType(CarnivorousPlant.class)
-                .whereProperty(CarnivorousPlant::trapType).equalTo("Snap Trap")
+                .where(property(CarnivorousPlant::trapType)).equalTo("Snap Trap")
                 .select(Plant::name)
                 .list();
 

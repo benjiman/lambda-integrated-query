@@ -1,8 +1,6 @@
 package com.benjiweber.linq.for_collections;
 
-import com.benjiweber.linq.ForwardingCollection;
-import com.benjiweber.linq.Group;
-import com.benjiweber.linq.Linq;
+import com.benjiweber.linq.*;
 import com.benjiweber.linq.tuples.Tuple;
 
 import java.util.*;
@@ -40,16 +38,16 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
         CollectionLinq<T> lessThan(U value);
         CollectionLinq<T> greaterThan(U value);
     }
-    default <U extends Comparable<U>> CollectionPropertyComparison<T,U> whereProperty(Function<T,U> propertyExtractor) {
+    default <U extends Comparable<U>> CollectionPropertyComparison<T,U> where(PropertyGetter<T,U> propertyExtractor) {
         return new CollectionPropertyComparison<T, U>() {
             public CollectionLinq<T> equalTo(U value) {
-                return where(item -> Objects.equals(propertyExtractor.apply(item), value));
+                return where(item -> Objects.equals(propertyExtractor.getter.apply(item), value));
             }
             public CollectionLinq<T> lessThan(U value) {
-                return where(item -> propertyExtractor.apply(item).compareTo(value) < 0);
+                return where(item -> propertyExtractor.getter.apply(item).compareTo(value) < 0);
             }
             public CollectionLinq<T> greaterThan(U value) {
-                return where (item -> propertyExtractor.apply(item).compareTo(value) > 0);
+                return where (item -> propertyExtractor.getter.apply(item).compareTo(value) > 0);
             }
         };
     }
@@ -60,14 +58,14 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
         CollectionLinq<T> contains(U item);
     }
 
-    default <U,V extends Collection<U>> CollectionCollectionCondition<T,U,V> whereAggregate(Function<T,V> collectionGetter) {
+    default <U,V extends Collection<U>> CollectionCollectionCondition<T,U,V> where(CollectionGetter<T,U,V> getter) {
         return new CollectionCollectionCondition<T,U,V>() {
             public CollectionLinq<T> all(Predicate<U> condition) {
                 return () ->
                     delegate()
                         .stream()
                         .filter(item ->
-                            collectionGetter.apply(item)
+                            getter.collectionGetter.apply(item)
                                 .stream()
                                 .allMatch(condition)
                         ).collect(toCollection(ArrayList::new));
@@ -77,7 +75,7 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
                     delegate()
                         .stream()
                         .filter(item ->
-                                        collectionGetter.apply(item)
+                                        getter.collectionGetter.apply(item)
                                                 .stream()
                                                 .anyMatch(condition)
                         ).collect(toCollection(ArrayList::new));
