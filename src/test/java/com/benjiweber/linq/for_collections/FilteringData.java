@@ -6,9 +6,11 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static com.benjiweber.linq.example.domain.customers.SampleCustomers.getCustomerList;
 import static com.benjiweber.linq.example.domain.pets.Person.person;
 import static com.benjiweber.linq.example.domain.pets.Pet.pet;
 import static com.benjiweber.linq.for_collections.DSL.*;
+import static com.benjiweber.linq.tuples.Tuple.tuple;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
@@ -91,5 +93,19 @@ public class FilteringData {
                 .list();
 
         assertEquals(asList("Whiskers"), result);
+    }
+
+    @Test
+    public void anonymous_types_filter() {
+        List<String> result = from(getCustomerList())
+                .select(customer -> tuple(customer.companyName(), customer.companyName().length()))
+                .where(match((name, length) -> name.contains("t")))
+                .select(into((name, length) -> name))
+                .list();
+
+        assertEquals(
+                asList("Another company"),
+                result
+        );
     }
 }
