@@ -6,9 +6,9 @@ LINQ style queries for Java 8 Streams
     @Test
     public void a_company_orders_in_2015() {
         List<Order> ordersIn2015 = from(customerList)
-                .where(property(Customer::companyName).equalTo("A Company")
+                .where(property(Customer::companyName).equalTo("A Company"))
                 .selectMany(Customer::orders)
-                .whereProperty(order -> order.orderDate().year()).equalTo(2015)
+                .where(order -> order.orderDate().year() == 2015)
                 .list();
 
         assertEquals(
@@ -70,7 +70,7 @@ LINQ style queries for Java 8 Streams
     public void any() {
         List<String> result =
             from(people)
-                .where(collection(Person::pets)).any(pet -> pet.age() > 6)
+                .where(collection(Person::pets).any(pet -> pet.age() > 6))
                 .select(pers -> pers.name())
                 .list();
     
