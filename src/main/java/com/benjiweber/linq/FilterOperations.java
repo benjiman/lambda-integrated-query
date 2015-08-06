@@ -12,8 +12,6 @@ public interface FilterOperations<T> {
         Linq<T> contains(U item);
     }
     <U,V extends Collection<U>> CollectionCondition<T,U,V> whereAggregate(Function<T,V> collectionGetter);
-    <U> Linq<T> whereEquals(Function<T,U> propertyExtractor, U comparisonValue);
-    <U> Linq<T> whereEquals(U comparisonValue, Function<T,U> propertyExtractor);
     interface PropertyComparison<T,U> {
         Linq<T> equalTo(U value);
         Linq<T> lessThan(U value);

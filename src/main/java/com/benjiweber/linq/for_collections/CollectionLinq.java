@@ -35,10 +35,6 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
         return streamOp(stream -> stream.filter(predicate));
     }
 
-    default <U> CollectionLinq<T> whereEquals(Function<T,U> propertyExtractor, U comparisonValue) {
-        return where((Predicate<T>) item -> Objects.equals(comparisonValue, propertyExtractor.apply(item)));
-    }
-
     interface CollectionPropertyComparison<T,U> extends PropertyComparison<T,U> {
         CollectionLinq<T> equalTo(U value);
         CollectionLinq<T> lessThan(U value);
@@ -56,10 +52,6 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
                 return where (item -> propertyExtractor.apply(item).compareTo(value) > 0);
             }
         };
-    }
-
-    default <U> CollectionLinq<T> whereEquals(U comparisonValue, Function<T,U> propertyExtractor) {
-        return whereEquals(propertyExtractor, comparisonValue);
     }
 
     interface CollectionCollectionCondition<T,U,V> extends CollectionCondition<T,U,V> {
@@ -138,7 +130,7 @@ public interface CollectionLinq<T> extends Linq<T>, ForwardingCollection<T> {
         return () ->
             select(item -> tuple(item, joiner.apply(item)))
                 .streamOp(stream ->
-                                stream.flatMap(into((item, items) -> items.stream().map(i2 -> tuple(item, i2))))
+                        stream.flatMap(into((item, items) -> items.stream().map(i2 -> tuple(item, i2))))
                 );
 
     }
