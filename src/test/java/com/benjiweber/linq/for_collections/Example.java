@@ -1,9 +1,11 @@
 package com.benjiweber.linq.for_collections;
 
+import com.benjiweber.linq.Group;
 import com.benjiweber.linq.example.domain.customers.SampleCustomers;
 import com.benjiweber.linq.example.domain.customers.SampleCustomers.Customer;
 import com.benjiweber.linq.example.domain.customers.SampleCustomers.Order;
 import com.benjiweber.linq.example.domain.pets.Person;
+import com.benjiweber.linq.tuples.Tuple;
 import org.junit.Test;
 
 import java.util.*;
@@ -40,18 +42,20 @@ public class Example {
     // Example from https://code.msdn.microsoft.com/LINQ-to-DataSets-Grouping-c62703ea
     @Test
     public void linq43_example_grouping() {
-        from(customerList)
-            .select(c -> tuple(
-                c.companyName(),
-                from(c.orders())
-                    .groupBy(o -> o.orderDate().year())
-                    .select(into((year, orders) -> tuple(
-                        year,
-                        from(orders)
-                            .groupBy(o -> o.orderDate().month())
-                            .select(into((month, monthOrders) -> tuple(month, monthOrders)))
-                    )))
-            )).forEach(System.out::println);
+        List<Customer> customerList = getCustomerList();
+
+        CollectionLinq<Tuple<String, CollectionLinq<Tuple<Integer, Group<Integer, Order>>>>> customerOrderGroups = from(customerList)
+                .select(c -> tuple(
+                        c.companyName(),
+                        from(c.orders())
+                                .groupBy(o -> o.orderDate().year())
+                                .select(into((year, orders) -> tuple(
+                                        year,
+                                        from(orders)
+                                                .groupBy(o -> o.orderDate().month())
+                                )))
+                ));
+
     }
 
     @Test
