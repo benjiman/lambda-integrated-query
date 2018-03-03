@@ -44,7 +44,7 @@ public class Example {
     public void linq43_example_grouping() {
         List<Customer> customerList = getCustomerList();
 
-        CollectionLinq<Tuple<String, CollectionLinq<Tuple<Integer, Group<Integer, Order>>>>> customerOrderGroups =
+        var customerOrderGroups =
             from(customerList)
             .select(c -> tuple(
                 c.companyName(),
