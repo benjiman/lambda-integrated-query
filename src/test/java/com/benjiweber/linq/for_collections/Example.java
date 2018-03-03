@@ -44,17 +44,17 @@ public class Example {
     public void linq43_example_grouping() {
         List<Customer> customerList = getCustomerList();
 
-        CollectionLinq<Tuple<String, CollectionLinq<Tuple<Integer, Group<Integer, Order>>>>> customerOrderGroups = from(customerList)
-                .select(c -> tuple(
-                        c.companyName(),
-                        from(c.orders())
-                                .groupBy(o -> o.orderDate().year())
-                                .select(into((year, orders) -> tuple(
-                                        year,
-                                        from(orders)
-                                                .groupBy(o -> o.orderDate().month())
-                                )))
-                ));
+        from(customerList)
+            .select(c -> tuple(
+                c.companyName(),
+                from(c.orders())
+                    .groupBy(o -> o.orderDate().year())
+                    .select(into((year, orders) -> tuple(
+                        year,
+                        from(orders)
+                            .groupBy(o -> o.orderDate().month())
+                    )))
+            ));
 
     }
 
