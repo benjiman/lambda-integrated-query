@@ -4,6 +4,7 @@ import com.benjiweber.linq.Group;
 import com.benjiweber.linq.example.domain.customers.SampleCustomers;
 import com.benjiweber.linq.example.domain.customers.SampleCustomers.Customer;
 import com.benjiweber.linq.example.domain.customers.SampleCustomers.Order;
+import com.benjiweber.linq.example.domain.customers.SampleCustomers.OrderDate;
 import com.benjiweber.linq.example.domain.pets.Person;
 import com.benjiweber.linq.tuples.Tuple;
 import org.junit.Test;
@@ -56,6 +57,21 @@ public class Example {
                             .groupBy(o -> o.orderDate().month())
                     )))
             ));
+
+    }
+
+    @Test public void anonymous_types_inference() {
+
+        var lengthOfNames  =
+            from(customerList)
+                .select(c -> new Object() {
+                    String companyName = c.companyName();
+                    int length = c.companyName().length();
+                });
+
+        lengthOfNames.forEach(
+            o -> System.out.println(o.companyName + " length " + o.length)
+        );
 
     }
 
